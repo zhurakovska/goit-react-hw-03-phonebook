@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Form, Label, Input, Button } from './Form.styled';
 
