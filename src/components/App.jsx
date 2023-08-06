@@ -19,6 +19,23 @@ export class App extends React.Component {
     filter: '',
   };
 
+  componentDidMount() {
+    const contacts = JSON.parse(window.localStorage.getItem('CONTACTS'));
+    if (contacts) {
+      this.setState({ contacts: contacts });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      console.log(this.state.contacts, '<');
+      window.localStorage.setItem(
+        'CONTACTS',
+        JSON.stringify(this.state.contacts)
+      );
+    }
+  }
+
   handleAddContact = contact => {
     const contactExists = this.state.contacts.some(
       existingName =>
@@ -31,8 +48,14 @@ export class App extends React.Component {
     }
     // тут мы передаем обьект контакт который представляет собой объект, который содержит информацию о новом контакте, который нужно добавить.
     const id = nanoid();
+    console.log(contact, '<<');
+    const prepareContact = {
+      ...contact,
+      id,
+    };
+
     this.setState(prev => ({
-      contacts: [...prev.contacts, contact],
+      contacts: [...prev.contacts, prepareContact],
     }));
   };
 
@@ -49,7 +72,10 @@ export class App extends React.Component {
 
   handleDeleteContact = id => {
     this.setState(prev => ({
-      contacts: prev.contacts.filter(contact => contact.id !== id),
+      contacts: prev.contacts.filter(contact => {
+        console.log(id);
+        return contact.id !== id;
+      }),
     }));
   };
 
